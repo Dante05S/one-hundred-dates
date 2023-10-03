@@ -1,21 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
+import DateView from 'pages/DateView';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 
 export default function App(): React.JSX.Element {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!a</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  return <DateView />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
