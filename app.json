@@ -22,6 +22,7 @@
       },
       "package": "com.dante05s.onehundreddates"
     },
+    "scheme": "one-hundred-dates",
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -29,6 +30,7 @@
       "eas": {
         "projectId": "005043e2-6378-42c9-a3e5-48bb420831f0"
       }
-    }
+    },
+    "plugins": ["expo-router"]
   }
 }
