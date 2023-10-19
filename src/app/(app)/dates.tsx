@@ -1,31 +1,11 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import React, { useCallback } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-// import { Image } from 'expo-image';
-import { useFonts } from 'expo-font';
-import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
+
 import Frame from 'components/Display/Frame';
 
-void preventAutoHideAsync();
-
-export default function DateView(): React.JSX.Element | null {
-  const [fontsLoaded] = useFonts({
-    'dynamic-schematic': require('../../../assets/fonts/dynamic-schematic.otf')
-  });
-
-  const handleOnLayout = useCallback(async () => {
-    if (fontsLoaded) {
-      await hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
+export default function Dates(): React.JSX.Element {
   return (
-    <ScrollView style={styles.container} onLayout={handleOnLayout}>
+    <ScrollView style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={{ marginRight: 10 }}>
           <Text style={styles.title}>Ir al Cine</Text>
