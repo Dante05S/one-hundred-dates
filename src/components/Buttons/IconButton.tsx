@@ -1,9 +1,14 @@
+import { makeStyles } from 'helpers/makeStyles';
 import React, { useState } from 'react';
-import { Text, StyleSheet, Pressable, type PressableProps } from 'react-native';
+import { Text, Pressable, type PressableProps } from 'react-native';
 
 interface Props extends PressableProps {
   children: React.ReactNode;
   disabled?: boolean;
+}
+
+interface StylesProps {
+  press: boolean;
 }
 
 export default function IconButton({
@@ -12,6 +17,7 @@ export default function IconButton({
   ...rest
 }: Props): React.JSX.Element {
   const [press, setPress] = useState<boolean>(false);
+  const styles = useStyles({ press });
 
   return (
     <Pressable
@@ -24,16 +30,15 @@ export default function IconButton({
       }}
       {...rest}
     >
-      <Text style={press ? styles.pressed : styles.notPressed}>{children}</Text>
+      <Text style={styles.icon}>{children}</Text>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  pressed: {
-    color: '#AEE6F8'
-  },
-  notPressed: {
-    color: '#d1d5db'
+const useStyles = makeStyles((theme, props: StylesProps) => ({
+  icon: {
+    color: props.press
+      ? theme.palette.primary.main
+      : theme.palette.text.placeholder
   }
-});
+}));

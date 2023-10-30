@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import Paragraph, { type ParagraphProps } from 'components/Paragraph';
 import useFormControl from 'hooks/useFormControl';
 import getFormControlState from 'utils/formControlState';
+import { makeStyles } from 'helpers/makeStyles';
 
 interface Props extends ParagraphProps {
   children: React.ReactNode;
@@ -16,6 +16,7 @@ export default function InputLabel({
   error,
   ...rest
 }: Props): React.JSX.Element {
+  const styles = useStyles();
   const muiFormControl = useFormControl();
 
   const formControlState = getFormControlState(
@@ -40,7 +41,7 @@ export default function InputLabel({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   label: {
     fontSize: 12,
     marginVertical: 2,
@@ -48,9 +49,9 @@ const styles = StyleSheet.create({
   },
   required: {
     fontSize: 14,
-    color: '#AEE6F8'
+    color: theme.palette.primary.main
   },
   error: {
-    color: '#d32f2f'
+    color: theme.palette.error
   }
-});
+}));

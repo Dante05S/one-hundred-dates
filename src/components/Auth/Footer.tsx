@@ -4,8 +4,10 @@ import { StyleSheet, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import socialNetworks from 'utils/socialNetworks';
 import { Link } from 'expo-router';
+import useTheme from 'hooks/useTheme';
 
 export default function Footer(): React.JSX.Element {
+  const { theme } = useTheme();
   return (
     <View style={styles.footer}>
       <Paragraph style={styles.text}>
@@ -14,7 +16,11 @@ export default function Footer(): React.JSX.Element {
       <View style={styles.containerSocial}>
         {socialNetworks.map((socialNetwork) => (
           <Link key={socialNetwork.key} href={socialNetwork.href}>
-            <AntDesign name={socialNetwork.icon} size={29} color="#AEE6F8" />
+            <AntDesign
+              name={socialNetwork.icon}
+              size={29}
+              color={theme.palette.primary.main}
+            />
           </Link>
         ))}
       </View>
@@ -32,7 +38,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   text: {
-    fontSize: 13,
     textAlign: 'center'
   },
   containerSocial: {
