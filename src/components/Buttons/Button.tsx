@@ -1,7 +1,8 @@
 import Paragraph from 'components/Paragraph';
+import { makeStyles } from 'helpers/makeStyles';
+import useTheme from 'hooks/useTheme';
 import React, { forwardRef } from 'react';
 import {
-  StyleSheet,
   Pressable,
   type PressableProps,
   View,
@@ -18,6 +19,9 @@ const Button = forwardRef<View, Props>(function Button(
   { children, loading = false, disabled = false, ...rest },
   ref
 ): React.JSX.Element {
+  const { theme } = useTheme();
+  const styles = useStyles();
+
   return (
     <Pressable
       ref={ref}
@@ -32,10 +36,13 @@ const Button = forwardRef<View, Props>(function Button(
       <View style={styles.container}>
         {loading && (
           <View style={styles.containerLoading}>
-            <ActivityIndicator color="#AEE6F8" size={25} />
+            <ActivityIndicator color={theme.palette.primary.main} size={25} />
           </View>
         )}
-        <Paragraph style={{ color: '#fff', fontSize: 15 }} variant="h1">
+        <Paragraph
+          style={{ color: theme.palette.primary.contrastText, fontSize: 15 }}
+          variant="h5"
+        >
           {children}
         </Paragraph>
       </View>
@@ -43,16 +50,19 @@ const Button = forwardRef<View, Props>(function Button(
   );
 });
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   button: {
     borderRadius: 999,
     padding: 10
   },
   pressed: {
-    backgroundColor: '#9ccfdf'
+    backgroundColor: theme.palette.primary.dark
   },
   notPressed: {
-    backgroundColor: '#AEE6F8'
+    backgroundColor: theme.palette.primary.main
+  },
+  disabled: {
+    backgroundColor: theme.palette.disabled
   },
   container: {
     display: 'flex',
@@ -64,10 +74,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     marginRight: 10
-  },
-  disabled: {
-    backgroundColor: '#d1d5db'
   }
-});
+}));
 
 export default Button;

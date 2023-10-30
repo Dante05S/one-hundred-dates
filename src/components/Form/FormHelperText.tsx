@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import useFormControl from 'hooks/useFormControl';
 import getFormControlState from 'utils/formControlState';
 import Paragraph from 'components/Paragraph';
+import { makeStyles } from 'helpers/makeStyles';
 
 interface Props {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ export default function FormHelperText({
   error
 }: Props): React.JSX.Element {
   const muiFormControl = useFormControl();
+  const styles = useStyles();
 
   const formControlState = getFormControlState(
     { error },
@@ -24,13 +25,16 @@ export default function FormHelperText({
     <>
       {children !== undefined && (
         <Paragraph
+          variant="span"
           style={[
             styles.text,
             formControlState.error ?? false ? styles.error : styles.notError
           ]}
         >
           {(formControlState.error ?? false) && (
-            <Paragraph style={(styles.error, { fontSize: 11 })}>*</Paragraph>
+            <Paragraph variant="span" style={[styles.error]}>
+              *
+            </Paragraph>
           )}
           {children}
         </Paragraph>
@@ -39,16 +43,15 @@ export default function FormHelperText({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   text: {
     marginTop: 4,
-    marginLeft: 8,
-    fontSize: 11
+    marginLeft: 8
   },
   notError: {
     opacity: 0.5
   },
   error: {
-    color: '#d32f2f'
+    color: theme.palette.error
   }
-});
+}));

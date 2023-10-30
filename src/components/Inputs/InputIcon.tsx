@@ -1,15 +1,17 @@
+import { makeStyles } from 'helpers/makeStyles';
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 
 interface Props {
   children: React.ReactNode;
-  position: keyof Pick<typeof styles, 'start' | 'end'>;
+  position: 'start' | 'end';
 }
 
 export default function InputIcon({
   children,
   position
 }: Props): React.JSX.Element {
+  const styles = useStyles();
   return (
     <View style={[styles.container, styles[position]]}>
       <Text style={styles.icon}>{children}</Text>
@@ -17,7 +19,7 @@ export default function InputIcon({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     height: '100%',
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   icon: {
-    color: '#d1d5db'
+    color: theme.palette.text.placeholder
   },
   start: {
     left: 0,
@@ -37,4 +39,4 @@ const styles = StyleSheet.create({
     right: 0,
     paddingRight: 20
   }
-});
+}));

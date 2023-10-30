@@ -16,6 +16,7 @@ import {
   type ValidationField
 } from 'helpers/Validator';
 import { useForm } from 'react-hook-form';
+import { trimValues } from 'utils/trimValues';
 
 interface ChildrenProps {
   handleSubmit: () => void;
@@ -70,6 +71,7 @@ export default function Form({
   const submit = (data: any): void => {
     const errors = validateFields();
     if (errors.length > 0) return;
+    trimValues(data);
     onSubmit(data);
   };
 

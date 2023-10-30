@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Image, type ImageStyle } from 'expo-image';
+import { Image } from 'expo-image';
+import { makeStyles } from 'helpers/makeStyles';
+import useTheme from 'hooks/useTheme';
 import React, { useEffect } from 'react';
-import {
-  type StyleProp,
-  StyleSheet,
-  type TextStyle,
-  View,
-  type ViewStyle
-} from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -37,6 +33,8 @@ export default function Frame({
   pin,
   couple
 }: Props): React.JSX.Element {
+  const { theme } = useTheme();
+  const styles = useStyles({ color });
   const rotateValue = useSharedValue(initialValue);
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -73,7 +71,7 @@ export default function Frame({
         alignItems: couple === 0 ? 'flex-start' : 'flex-end'
       }}
     >
-      <Animated.View style={[colorFrame(color), animatedStyles]}>
+      <Animated.View style={[styles.frame, animatedStyles]}>
         <View
           style={{
             ...styles.drawingPin,
@@ -83,8 +81,8 @@ export default function Frame({
         <View
           style={{
             borderStyle: 'solid',
-            borderColor: color === 'primary' ? '#AEE6F8' : '#FACFE4',
-            backgroundColor: color === 'primary' ? '#AEE6F8' : '#FACFE4'
+            borderColor: theme.palette[color].main,
+            backgroundColor: theme.palette[color].main
           }}
         >
           <Image
@@ -119,7 +117,7 @@ export default function Frame({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme, props: Pick<Props, 'color'>) => ({
   containerFrame: {
     paddingHorizontal: 20,
     paddingVertical: 40,
@@ -133,6 +131,7 @@ const styles = StyleSheet.create({
     borderWidth: border,
     borderBottomWidth: borderDown,
     borderRadius: 10,
+    borderColor: theme.palette[props.color].main,
     position: 'relative',
     shadowColor: '#000000',
     shadowOffset: {
@@ -172,17 +171,5 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: -24,
     transform: `translateX(${(widthFrame - border * 2 - 15) / 2}px)`
-  },
-  primary: {
-    borderColor: '#AEE6F8'
-  },
-  secondary: {
-    borderColor: '#FACFE4'
   }
-});
-
-const colorFrame = (
-  color: keyof typeof styles
-): StyleProp<ViewStyle | TextStyle | ImageStyle> => {
-  return StyleSheet.compose(styles.frame, styles[color]);
-};
+}));

@@ -17,6 +17,6 @@ export interface TokenUser {
   token: string;
 }
 
-export type LoginUser = Pick<RegisterUser, 'name' | 'password'>;
+export type LoginUser = Pick<RegisterUser, 'email' | 'password'>;
 export type EmailUser = Pick<User, 'email'>;
 export type TokenSessionUser = Pick<TokenUser, 'token'>;
