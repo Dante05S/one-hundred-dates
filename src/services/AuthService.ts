@@ -6,7 +6,8 @@ import {
   type EmailUser,
   type TokenUser,
   type TokenSessionUser,
-  type LoginUser
+  type LoginUser,
+  type CodeVerifyUser
 } from 'models/User.interface';
 import Service from 'services';
 
@@ -28,6 +29,12 @@ export default class AuthService extends Service<User> implements IAuthService {
 
   async login(data: LoginUser): Promise<Response<TokenUser>> {
     this.setEndpoint('auth/login');
+    const response: Response<TokenUser> = await this.post({ ...data }, true);
+    return response;
+  }
+
+  async validateCode(data: CodeVerifyUser): Promise<Response<TokenUser>> {
+    this.setEndpoint('auth/validate-code');
     const response: Response<TokenUser> = await this.post({ ...data }, true);
     return response;
   }

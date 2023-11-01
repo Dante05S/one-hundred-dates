@@ -1,7 +1,7 @@
 import React from 'react';
 import Paragraph from 'components/Paragraph';
 import { StyleSheet, View } from 'react-native';
-import FormRegister from 'components/Auth/Register/FormRegister';
+import FormRegister from 'views/auth/Register/FormRegister';
 import { Link } from 'expo-router';
 import useTheme from 'hooks/useTheme';
 

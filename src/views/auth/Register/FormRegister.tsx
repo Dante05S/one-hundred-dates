@@ -46,7 +46,7 @@ export default function FormRegister(): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
 
   const redirectTo = (): void => {
-    router.replace('/dates');
+    router.replace('/code-verification');
     setLoading(false);
   };
 

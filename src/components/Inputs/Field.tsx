@@ -6,12 +6,16 @@ import useFormControl from 'hooks/useFormControl';
 import getFormControlState from 'utils/formControlState';
 import { makeStyles } from 'helpers/makeStyles';
 
+type Variant = 'outlined' | 'code';
+
 export interface FieldProps extends InputProps {
   startIcon?: React.JSX.Element;
   endIcon?: React.JSX.Element;
   type?: InputModeOptions;
   name?: string;
   error?: boolean;
+  variant?: Variant;
+  maxLength?: number;
 }
 
 interface StylesProps {
@@ -20,7 +24,17 @@ interface StylesProps {
 }
 
 const Field = forwardRef<TextInput, FieldProps>(function Field(
-  { startIcon, endIcon, type, defaultValue = '', name = '', error, ...rest },
+  {
+    startIcon,
+    endIcon,
+    type,
+    defaultValue = '',
+    variant = 'outlined',
+    name = '',
+    error,
+    maxLength,
+    ...rest
+  },
   ref
 ): React.JSX.Element {
   const [focus, setFocus] = useState<boolean>(false);
@@ -39,9 +53,10 @@ const Field = forwardRef<TextInput, FieldProps>(function Field(
       <Input
         ref={ref}
         selectionColor="#94a3b8"
-        style={styles.input}
+        style={[styles.input, styles[variant]]}
         name={name}
-        type={type}
+        type={variant === 'code' ? 'numeric' : type}
+        maxLength={variant === 'code' ? 1 : maxLength}
         {...rest}
         onFocus={() => {
           setFocus(true);
@@ -61,14 +76,25 @@ const useStyles = makeStyles((theme, props: StylesProps) => {
     : theme.palette.text.placeholder;
   return {
     input: {
-      fontFamily: 'poppins',
-      fontSize: 14,
       borderStyle: 'solid',
       borderWidth: 1.7,
       borderRadius: 10,
-      paddingVertical: 10,
-      paddingHorizontal: 20,
       borderColor: props.focus ? theme.palette.primary.main : isError
+    },
+    outlined: {
+      fontFamily: 'poppins',
+      fontSize: 14,
+      paddingVertical: 10,
+      paddingHorizontal: 20
+    },
+    code: {
+      fontFamily: 'poppins-semibold',
+      width: 64,
+      height: 64,
+      fontSize: 25,
+      textAlign: 'center',
+      paddingTop: 5,
+      paddingHorizontal: 16
     }
   };
 });
