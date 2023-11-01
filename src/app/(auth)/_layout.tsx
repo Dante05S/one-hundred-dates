@@ -1,5 +1,5 @@
-import Footer from 'components/Auth/Footer';
-import Wave from 'components/Auth/Wave';
+import Footer from 'views/auth/Footer';
+import Wave from 'views/auth/Wave';
 import { Slot } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';

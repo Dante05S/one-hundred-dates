@@ -1,7 +1,7 @@
-import Paragraph from 'components/Paragraph';
+import Paragraph, { type ParagraphProps } from 'components/Paragraph';
 import { makeStyles } from 'helpers/makeStyles';
 import useTheme from 'hooks/useTheme';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import {
   Pressable,
   type PressableProps,
@@ -13,39 +13,80 @@ interface Props extends PressableProps {
   children: React.ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  variant?: 'contained' | 'text';
+  paragraphProps?: Pick<ParagraphProps, 'style' | 'variant'>;
 }
 
 const Button = forwardRef<View, Props>(function Button(
-  { children, loading = false, disabled = false, ...rest },
+  {
+    children,
+    loading = false,
+    disabled = false,
+    variant = 'contained',
+    paragraphProps,
+    ...rest
+  },
   ref
 ): React.JSX.Element {
+  const [press, setPress] = useState<boolean>(false);
   const { theme } = useTheme();
-  const styles = useStyles();
+  const styles = useStyles({ press, disabled });
 
   return (
     <Pressable
       ref={ref}
       disabled={disabled || loading}
-      style={({ pressed }) => [
-        styles.button,
-        pressed && (!disabled || !loading) ? styles.pressed : styles.notPressed,
-        disabled || loading ? styles.disabled : {}
-      ]}
+      style={
+        variant === 'contained'
+          ? [
+              styles.button,
+              press && (!disabled || !loading)
+                ? styles.pressed
+                : styles.notPressed,
+              disabled || loading ? styles.disabled : {}
+            ]
+          : {}
+      }
+      onPressIn={() => {
+        setPress(true);
+      }}
+      onPressOut={() => {
+        setPress(false);
+      }}
       {...rest}
     >
-      <View style={styles.container}>
-        {loading && (
-          <View style={styles.containerLoading}>
-            <ActivityIndicator color={theme.palette.primary.main} size={25} />
-          </View>
-        )}
+      {variant === 'contained' ? (
+        <View style={styles.container}>
+          {loading && (
+            <View style={styles.containerLoading}>
+              <ActivityIndicator color={theme.palette.primary.main} size={25} />
+            </View>
+          )}
+          <Paragraph
+            style={[
+              { color: theme.palette.primary.contrastText, fontSize: 15 },
+              paragraphProps?.style
+            ]}
+            variant={paragraphProps?.variant ?? 'h5'}
+          >
+            {children}
+          </Paragraph>
+        </View>
+      ) : (
         <Paragraph
-          style={{ color: theme.palette.primary.contrastText, fontSize: 15 }}
-          variant="h5"
+          variant={paragraphProps?.variant ?? 'h5'}
+          style={[
+            styles.variantText,
+            press && (!disabled || !loading)
+              ? styles.pressedText
+              : styles.notPressedText,
+            disabled || loading ? styles.disabledText : {},
+            paragraphProps?.style
+          ]}
         >
-          {children}
+          Reenviar código
         </Paragraph>
-      </View>
+      )}
     </Pressable>
   );
 });
@@ -74,6 +115,18 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     marginRight: 10
+  },
+  variantText: {
+    fontSize: 15
+  },
+  pressedText: {
+    color: theme.palette.primary.dark
+  },
+  notPressedText: {
+    color: theme.palette.primary.main
+  },
+  disabledText: {
+    color: theme.palette.disabled
   }
 }));
 

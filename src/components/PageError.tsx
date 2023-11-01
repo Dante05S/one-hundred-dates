@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import Wave from './Auth/Wave';
+import Wave from '../views/auth/Wave';
 import Paragraph from './Paragraph';
 import Button from './Buttons/Button';
 import { type ErrorBoundaryProps } from 'expo-router';

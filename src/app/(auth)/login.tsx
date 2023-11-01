@@ -2,7 +2,7 @@ import React from 'react';
 import Paragraph from 'components/Paragraph';
 import { StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
-import FormLogin from 'components/Auth/Login/FormLogin';
+import FormLogin from 'views/auth/Login/FormLogin';
 import useTheme from 'hooks/useTheme';
 
 export default function Login(): React.JSX.Element {
