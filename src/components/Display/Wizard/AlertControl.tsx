@@ -52,7 +52,9 @@ export default function AlertControl({ children }: Props): React.JSX.Element {
                 )}
               </View>
               <View style={styles.message}>
-                <Paragraph style={{ fontSize: 13.5 }}>{msg}</Paragraph>
+                <Paragraph style={{ fontSize: 13.5, lineHeight: 14 }}>
+                  {msg}
+                </Paragraph>
               </View>
             </View>
           ))}

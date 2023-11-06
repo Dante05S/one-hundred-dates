@@ -10,22 +10,19 @@ import useAlertControl from 'hooks/userAlertControl';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import useTheme from 'hooks/useTheme';
 import Paragraph from 'components/Paragraph';
-import useAnimPopUp from 'hooks/animations/useAnimPopUp';
-import Animated from 'react-native-reanimated';
 import Button from 'components/Buttons/Button';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
+import PopUp from 'components/Animations/PopUp';
 
 interface ResendCodeProps {
   resendCode: () => Promise<void>;
 }
 
 function ResendCode({ resendCode }: ResendCodeProps): React.JSX.Element {
-  const animatedStyles = useAnimPopUp(0, 1, 500);
-
   return (
     <>
-      <Animated.View style={animatedStyles}>
+      <PopUp config={{ duration: 500 }}>
         <Button
           onPress={() => {
             void resendCode();
@@ -35,7 +32,7 @@ function ResendCode({ resendCode }: ResendCodeProps): React.JSX.Element {
         >
           Reenviar código
         </Button>
-      </Animated.View>
+      </PopUp>
     </>
   );
 }

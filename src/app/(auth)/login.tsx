@@ -13,7 +13,7 @@ export default function Login(): React.JSX.Element {
       <Paragraph>Diviértete con tu pareja 💙</Paragraph>
       <FormLogin />
       <View style={styles.register}>
-        <Paragraph>
+        <Paragraph style={{ textAlign: 'center' }}>
           ¿Aún no tienes una cuenta?{' '}
           <Link href="/register">
             <Paragraph style={{ color: theme.palette.primary.main }}>
