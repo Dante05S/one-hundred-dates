@@ -2,18 +2,11 @@
 import { Image } from 'expo-image';
 import { makeStyles } from 'helpers/makeStyles';
 import useTheme from 'hooks/useTheme';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming
-} from 'react-native-reanimated';
 import { type Color } from 'types/color';
 import { type Pin } from 'types/pin';
+import * as Animatable from 'react-native-animatable';
 
 interface Props {
   color: Color;
@@ -21,12 +14,20 @@ interface Props {
   couple: number;
 }
 
-const initialValue = 5;
 const widthFrame = 197;
 const heightFrame = 257;
 const border = 17;
 const borderDown = 55;
 const sizePin = 18;
+
+const pendulum: Animatable.CustomAnimation = {
+  from: {
+    transform: [{ rotate: `5deg` }, { translateX: -15 }]
+  },
+  to: {
+    transform: [{ rotate: `-5deg` }, { translateX: 15 }]
+  }
+};
 
 export default function Frame({
   color,
@@ -35,34 +36,6 @@ export default function Frame({
 }: Props): React.JSX.Element {
   const { theme } = useTheme();
   const styles = useStyles({ color });
-  const rotateValue = useSharedValue(initialValue);
-
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateY: -(heightFrame + border + borderDown) / 2 },
-        { rotate: `${rotateValue.value}deg` },
-        { translateY: (heightFrame + border + borderDown) / 2 }
-      ]
-    };
-  });
-
-  useEffect(() => {
-    rotateValue.value = withRepeat(
-      withSequence(
-        withTiming(initialValue, {
-          duration: 1500,
-          easing: Easing.inOut(Easing.quad)
-        }),
-        withTiming(-5, {
-          duration: 1500,
-          easing: Easing.inOut(Easing.quad)
-        })
-      ),
-      -1,
-      true
-    );
-  }, []);
 
   return (
     <View
@@ -71,48 +44,56 @@ export default function Frame({
         alignItems: couple === 0 ? 'flex-start' : 'flex-end'
       }}
     >
-      <Animated.View style={[styles.frame, animatedStyles]}>
-        <View
-          style={{
-            ...styles.drawingPin,
-            backgroundColor: '#fff'
-          }}
-        />
-        <View
-          style={{
-            borderStyle: 'solid',
-            borderColor: theme.palette[color].main,
-            backgroundColor: theme.palette[color].main
-          }}
-        >
-          <Image
-            style={styles.image}
-            source={
-              couple === 0
-                ? require('../../../assets/images/Yo.jpg')
-                : require('../../../assets/images/Ella.jpg')
-            }
-            contentFit="cover"
+      <Animatable.View
+        duration={1500}
+        easing="ease-in-out-quad"
+        direction="alternate"
+        iterationCount="infinite"
+        animation={pendulum}
+      >
+        <View style={[styles.frame]}>
+          <View
+            style={{
+              ...styles.drawingPin,
+              backgroundColor: '#fff'
+            }}
           />
+          <View
+            style={{
+              borderStyle: 'solid',
+              borderColor: theme.palette[color].main,
+              backgroundColor: theme.palette[color].main
+            }}
+          >
+            <Image
+              style={styles.image}
+              source={
+                couple === 0
+                  ? require('../../../assets/images/Yo.jpg')
+                  : require('../../../assets/images/Ella.jpg')
+              }
+              contentFit="cover"
+            />
+          </View>
+          <View
+            style={{
+              ...styles.containerPin,
+              right: couple === 1 ? 8 : undefined,
+              left: couple === 0 ? 8 : undefined
+            }}
+          >
+            <Image
+              style={styles.pin}
+              source={
+                pin === 'first'
+                  ? require('../../../assets/images/pin-1.webp')
+                  : require('../../../assets/images/pin-2.webp')
+              }
+              contentFit="cover"
+            />
+          </View>
         </View>
-        <View
-          style={{
-            ...styles.containerPin,
-            right: couple === 1 ? 8 : undefined,
-            left: couple === 0 ? 8 : undefined
-          }}
-        >
-          <Image
-            style={styles.pin}
-            source={
-              pin === 'first'
-                ? require('../../../assets/images/pin-1.webp')
-                : require('../../../assets/images/pin-2.webp')
-            }
-            contentFit="cover"
-          />
-        </View>
-      </Animated.View>
+      </Animatable.View>
     </View>
   );
 }
