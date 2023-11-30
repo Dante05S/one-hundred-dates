@@ -25,9 +25,6 @@ export default class HttpRequest {
   buildUrl(id = ''): string {
     const endpoint = id !== '' ? `${this.endpoint}/${id}` : this.endpoint;
     const params = this.params !== '' ? `?${this.params}` : '';
-    console.log(
-      `${process.env.EXPO_PUBLIC_API_URI ?? ''}/${endpoint}${params}`
-    );
     return `${process.env.EXPO_PUBLIC_API_URI ?? ''}/${endpoint}${params}`;
   }
 
@@ -104,7 +101,6 @@ export default class HttpRequest {
     isPublic = false,
     token?: string
   ): Promise<Response<T>> {
-    console.log(data);
     try {
       const response = await axios.post<Response<T>>(this.buildUrl(''), data, {
         headers: {

@@ -5,7 +5,7 @@ import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import Form from 'components/Form';
 import TextField from 'components/Inputs/TextField';
 import InputIcon from 'components/Inputs/InputIcon';
-import { type RegisterUser } from 'models/User.interface';
+import { type User, type RegisterUser } from 'models/User.interface';
 import { type ValidationField } from 'helpers/Validator';
 import validationsPassword from 'utils/validationsPassword';
 import ShowPassword from 'components/ShowPassword';
@@ -13,6 +13,7 @@ import Button from 'components/Buttons/Button';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
 import useAlertControl from 'hooks/userAlertControl';
+import { setValueStorage } from 'utils/storageMmkv';
 
 const INIT_USER: RegisterUser = {
   name: '',
@@ -59,6 +60,9 @@ export default function FormRegister(): React.JSX.Element {
       setLoading(false);
       return;
     }
+    const responseData = response.data as User;
+    setValueStorage('email', responseData.email, 60 * 5);
+    setValueStorage('name', responseData.name, 60 * 5);
     redirectTo();
   };
 
