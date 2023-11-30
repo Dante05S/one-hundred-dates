@@ -4,7 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import Form from 'components/Form';
 import TextField from 'components/Inputs/TextField';
 import InputIcon from 'components/Inputs/InputIcon';
-import { type LoginUser } from 'models/User.interface';
+import { type TokenUser, type LoginUser } from 'models/User.interface';
 import { type ValidationField } from 'helpers/Validator';
 import ShowPassword from 'components/ShowPassword';
 import Button from 'components/Buttons/Button';
@@ -12,6 +12,7 @@ import useAlertControl from 'hooks/userAlertControl';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
 import { router } from 'expo-router';
+import { setValueStorage } from 'utils/storageMmkv';
 
 const INIT_USER: LoginUser = {
   email: '',
@@ -38,8 +39,13 @@ export default function FormLogin(): React.JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const redirectTo = (): void => {
+  const redirectToHome = (): void => {
     router.replace('/dates');
+    setLoading(false);
+  };
+
+  const redirectToVerification = (): void => {
+    router.replace('/code-verification');
     setLoading(false);
   };
 
@@ -52,7 +58,14 @@ export default function FormLogin(): React.JSX.Element {
       setLoading(false);
       return;
     }
-    redirectTo();
+    const userResponse = response.data as TokenUser;
+    if (!userResponse.user.email_verification) {
+      setValueStorage('email', userResponse.user.email, 60 * 5);
+      setValueStorage('name', userResponse.user.name, 60 * 5);
+      redirectToVerification();
+      return;
+    }
+    redirectToHome();
   };
 
   const onSubmit = (data: LoginUser): void => {

@@ -6,10 +6,12 @@ import CodeInputs, { type ICodeInputs } from './CodeInputs';
 import TimerCode from './TimerCode';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
-// import { type TokenUser } from 'models/User.interface';
 import { router } from 'expo-router';
+import useStorageValue from 'hooks/useStorageValue';
+import { storage } from 'utils/storageMmkv';
 
 export default function FormCodeVerification(): React.JSX.Element {
+  const email = useStorageValue('email');
   const { openAlert } = useAlertControl();
   const [codeInputs, setCodeInputs] = useState<ICodeInputs>({
     sms_token1: '',
@@ -31,7 +33,7 @@ export default function FormCodeVerification(): React.JSX.Element {
   const login = async (): Promise<void> => {
     setLoading(true);
     const data = {
-      email: 'dante05s@hotmail.com',
+      email: email ?? '',
       code_token: `${codeInputs.sms_token1}${codeInputs.sms_token2}${codeInputs.sms_token3}${codeInputs.sms_token4}`
     };
 
@@ -54,11 +56,11 @@ export default function FormCodeVerification(): React.JSX.Element {
     //   return;
     // }
 
-    // await authService.deleteCookieEmail();
+    storage.delete('email');
+    storage.delete('name');
 
     // // Set global state app
     // setUser(responseData.user);
-    console.log(response);
     redirectTo();
   };
 

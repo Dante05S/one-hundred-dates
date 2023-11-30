@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import 'expo-dev-client';
 import { useEffect } from 'react';
 import { SplashScreen, Slot, type ErrorBoundaryProps } from 'expo-router';
 import { useFonts } from 'expo-font';
@@ -11,6 +12,7 @@ import PageError from 'components/PageError';
 import ThemeProvider from 'context/ThemeContext/ThemeProvider';
 import theme from 'theme';
 import { StyleSheet, View } from 'react-native';
+import Paragraph from 'components/Paragraph';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,7 +34,7 @@ export default function RootLayout(): React.JSX.Element | null {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null;
+    return <Paragraph>Hola</Paragraph>;
   }
 
   return (

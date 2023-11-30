@@ -14,6 +14,7 @@ import Button from 'components/Buttons/Button';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
 import PopUp from 'components/Animations/PopUp';
+import useStorageValue from 'hooks/useStorageValue';
 
 interface ResendCodeProps {
   resendCode: () => Promise<void>;
@@ -41,13 +42,14 @@ export default function TimerCode(): React.JSX.Element {
   const { timer, startTimer } = useTimer(60);
   const { theme } = useTheme();
   const { openAlert } = useAlertControl();
+  const email = useStorageValue('email');
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const resendCode = async (): Promise<void> => {
     setLoading(true);
     const authService = new AuthService();
-    const response = await authService.resendCode('dante05s@hotmail.com');
+    const response = await authService.resendCode(email ?? '');
     if (!responseIsOk(response.success, response.data, true)) {
       openAlert('error', response.errors);
       setLoading(false);

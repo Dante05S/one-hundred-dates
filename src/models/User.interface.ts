@@ -1,9 +1,12 @@
 export interface User {
   name: string;
   email: string;
+  email_verification: boolean;
 }
 
-export interface RegisterUser extends User {
+export type FormUser = Pick<User, 'name' | 'email'>;
+
+export interface RegisterUser extends FormUser {
   password: string;
 }
 
@@ -14,7 +17,7 @@ export interface CodeVerifyUser {
 
 export interface TokenUser {
   user: User;
-  token: string;
+  token: string | null;
 }
 
 export type LoginUser = Pick<RegisterUser, 'email' | 'password'>;
