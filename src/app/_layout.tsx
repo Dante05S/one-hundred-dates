@@ -5,13 +5,14 @@ import { SplashScreen, Slot, type ErrorBoundaryProps } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
   Poppins_400Regular,
+  Poppins_500Medium,
   Poppins_600SemiBold
 } from '@expo-google-fonts/poppins';
 import AlertControl from 'components/Display/Wizard/AlertControl';
 import PageError from 'components/PageError';
 import ThemeProvider from 'context/ThemeContext/ThemeProvider';
 import theme from 'theme';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import Paragraph from 'components/Paragraph';
 
 SplashScreen.preventAutoHideAsync();
@@ -23,6 +24,7 @@ export function ErrorBoundary(props: ErrorBoundaryProps): React.JSX.Element {
 export default function RootLayout(): React.JSX.Element | null {
   const [fontsLoaded] = useFonts({
     'poppins': Poppins_400Regular,
+    'poppins-medium': Poppins_500Medium,
     'poppins-semibold': Poppins_600SemiBold,
     'dynamic-schematic': require('../../assets/fonts/dynamic-schematic.otf')
   });
@@ -40,9 +42,9 @@ export default function RootLayout(): React.JSX.Element | null {
   return (
     <ThemeProvider theme={theme}>
       <AlertControl>
-        <View style={styles.rootContainer}>
+        <ScrollView contentContainerStyle={styles.rootContainer}>
           <Slot />
-        </View>
+        </ScrollView>
       </AlertControl>
     </ThemeProvider>
   );

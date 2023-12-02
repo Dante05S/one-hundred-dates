@@ -83,7 +83,6 @@ const useStyles = makeStyles((theme, props: StylesProps) => {
     },
     outlined: {
       fontFamily: 'poppins',
-      fontSize: 14,
       paddingVertical: 10,
       paddingHorizontal: 20
     },

@@ -6,6 +6,7 @@ import {
   Pressable,
   type PressableProps,
   View,
+  StyleSheet,
   ActivityIndicator
 } from 'react-native';
 
@@ -15,6 +16,30 @@ interface Props extends PressableProps {
   disabled?: boolean;
   variant?: 'contained' | 'text';
   paragraphProps?: Pick<ParagraphProps, 'style' | 'variant'>;
+  startIcon?: React.JSX.Element;
+  endIcon?: React.JSX.Element;
+}
+
+interface ButtonIconProps {
+  children: React.ReactNode;
+  loading: boolean;
+  startIcon?: React.JSX.Element;
+  endIcon?: React.JSX.Element;
+}
+
+function ButtonIcon({
+  children,
+  startIcon,
+  endIcon,
+  loading
+}: ButtonIconProps): React.JSX.Element {
+  return (
+    <View style={stylesButtonIcon.containerButton}>
+      {!loading && startIcon}
+      {children}
+      {!loading && endIcon}
+    </View>
+  );
 }
 
 const Button = forwardRef<View, Props>(function Button(
@@ -24,6 +49,8 @@ const Button = forwardRef<View, Props>(function Button(
     disabled = false,
     variant = 'contained',
     paragraphProps,
+    startIcon,
+    endIcon,
     ...rest
   },
   ref
@@ -62,33 +89,47 @@ const Button = forwardRef<View, Props>(function Button(
               <ActivityIndicator color={theme.palette.primary.main} size={25} />
             </View>
           )}
+          <ButtonIcon loading={loading} startIcon={startIcon} endIcon={endIcon}>
+            <Paragraph
+              style={[
+                { color: theme.palette.primary.contrastText, fontSize: 15 },
+                paragraphProps?.style
+              ]}
+              variant={paragraphProps?.variant ?? 'h5'}
+            >
+              {children}
+            </Paragraph>
+          </ButtonIcon>
+        </View>
+      ) : (
+        <ButtonIcon loading={loading} startIcon={startIcon} endIcon={endIcon}>
           <Paragraph
+            variant={paragraphProps?.variant ?? 'h5'}
             style={[
-              { color: theme.palette.primary.contrastText, fontSize: 15 },
+              styles.variantText,
+              press && (!disabled || !loading)
+                ? styles.pressedText
+                : styles.notPressedText,
+              disabled || loading ? styles.disabledText : {},
               paragraphProps?.style
             ]}
-            variant={paragraphProps?.variant ?? 'h5'}
           >
             {children}
           </Paragraph>
-        </View>
-      ) : (
-        <Paragraph
-          variant={paragraphProps?.variant ?? 'h5'}
-          style={[
-            styles.variantText,
-            press && (!disabled || !loading)
-              ? styles.pressedText
-              : styles.notPressedText,
-            disabled || loading ? styles.disabledText : {},
-            paragraphProps?.style
-          ]}
-        >
-          Reenviar código
-        </Paragraph>
+        </ButtonIcon>
       )}
     </Pressable>
   );
+});
+
+const stylesButtonIcon = StyleSheet.create({
+  containerButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7
+  }
 });
 
 const useStyles = makeStyles((theme) => ({

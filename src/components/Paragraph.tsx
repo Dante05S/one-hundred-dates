@@ -1,4 +1,5 @@
 import { makeStyles } from 'helpers/makeStyles';
+import { type ThemeTypography } from 'interfaces/theme.interface';
 import React from 'react';
 import {
   type TextProps,
@@ -10,7 +11,7 @@ import {
 export interface ParagraphProps extends TextProps {
   children: React.ReactNode;
   style?: StyleProp<TextStyle>;
-  variant?: 'span' | 'p' | 'h5';
+  variant?: keyof ThemeTypography;
 }
 
 export default function Paragraph({
