@@ -2,11 +2,11 @@ import Footer from 'views/auth/Footer';
 import Wave from 'views/auth/Wave';
 import { Slot } from 'expo-router';
 import React from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export default function AuthLayout(): React.JSX.Element {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <>
       <View style={styles.containerWave}>
         <Wave />
       </View>
@@ -16,15 +16,11 @@ export default function AuthLayout(): React.JSX.Element {
       <View style={styles.containerFooter}>
         <Footer />
       </View>
-    </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    minHeight: '100%'
-  },
   containerWave: {
     position: 'relative',
     height: 200,

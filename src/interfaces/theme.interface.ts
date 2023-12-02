@@ -27,6 +27,7 @@ export interface ThemePalette {
 
 export interface ThemeTypography {
   readonly h5: TextProps;
+  readonly h6: TextProps;
   readonly p: TextProps;
   readonly span: TextProps;
 }

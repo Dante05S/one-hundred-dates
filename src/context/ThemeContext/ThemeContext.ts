@@ -37,6 +37,10 @@ export const defaultTheme: ThemeState = {
         fontSize: 24,
         fontFamily: 'poppins-semibold'
       },
+      h6: {
+        fontSize: 22,
+        fontFamily: 'poppins-medium'
+      },
       p: {
         fontSize: 16,
         fontFamily: 'poppins'
