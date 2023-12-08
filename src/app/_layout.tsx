@@ -14,6 +14,7 @@ import ThemeProvider from 'context/ThemeContext/ThemeProvider';
 import theme from 'theme';
 import { ScrollView, StyleSheet } from 'react-native';
 import Paragraph from 'components/Paragraph';
+import ToastControl from 'components/Display/Toast/ToastControl';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,11 +42,13 @@ export default function RootLayout(): React.JSX.Element | null {
 
   return (
     <ThemeProvider theme={theme}>
-      <AlertControl>
-        <ScrollView contentContainerStyle={styles.rootContainer}>
-          <Slot />
-        </ScrollView>
-      </AlertControl>
+      <ToastControl>
+        <AlertControl>
+          <ScrollView contentContainerStyle={styles.rootContainer}>
+            <Slot />
+          </ScrollView>
+        </AlertControl>
+      </ToastControl>
     </ThemeProvider>
   );
 }

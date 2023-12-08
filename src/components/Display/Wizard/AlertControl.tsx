@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
   },
   containerMessage: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   message: {
     marginLeft: 6

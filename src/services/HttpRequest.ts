@@ -4,6 +4,7 @@
 import axios, { type AxiosResponse } from 'axios';
 import { type Response } from 'interfaces/response.interface';
 import { type ResponseObjectData } from 'types/response_data.type';
+import { getValueToken } from 'utils/secureStorage';
 
 export default class HttpRequest {
   private endpoint: string;
@@ -64,9 +65,9 @@ export default class HttpRequest {
 
   async get<T>(
     id: string | null = null,
-    isPublic = false,
-    token?: string
+    isPublic = false
   ): Promise<Response<T>> {
+    const token = !isPublic ? await getValueToken() : '';
     try {
       let response: AxiosResponse<Response<T>>;
       if (id != null) {
@@ -76,7 +77,7 @@ export default class HttpRequest {
             'api-key': isPublic
               ? process.env.EXPO_PUBLIC_FRONT_API_KEY ?? ''
               : '',
-            Authorization: token !== undefined ? `Bearer ${token}` : ''
+            Authorization: `Bearer ${token}`
           }
         });
       } else {
@@ -98,9 +99,9 @@ export default class HttpRequest {
 
   async post<T>(
     data: ResponseObjectData,
-    isPublic = false,
-    token?: string
+    isPublic = false
   ): Promise<Response<T>> {
+    const token = !isPublic ? await getValueToken() : '';
     try {
       const response = await axios.post<Response<T>>(this.buildUrl(''), data, {
         headers: {
@@ -108,7 +109,7 @@ export default class HttpRequest {
           'api-key': isPublic
             ? process.env.EXPO_PUBLIC_FRONT_API_KEY ?? ''
             : '',
-          Authorization: token !== undefined ? `Bearer ${token}` : ''
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -121,9 +122,9 @@ export default class HttpRequest {
   async put<T>(
     id: string,
     data: ResponseObjectData,
-    isPublic = false,
-    token?: string
+    isPublic = false
   ): Promise<Response<T>> {
+    const token = !isPublic ? await getValueToken() : '';
     try {
       const response = await axios.put<Response<T>>(this.buildUrl(id), data, {
         headers: {
@@ -131,7 +132,7 @@ export default class HttpRequest {
           'api-key': isPublic
             ? process.env.EXPO_PUBLIC_FRONT_API_KEY ?? ''
             : '',
-          Authorization: token !== undefined ? `Bearer ${token}` : ''
+          Authorization: `Bearer ${token}`
         }
       });
 
@@ -143,9 +144,9 @@ export default class HttpRequest {
 
   async putNew<T>(
     data: ResponseObjectData,
-    isPublic = false,
-    token?: string
+    isPublic = false
   ): Promise<Response<T>> {
+    const token = !isPublic ? await getValueToken() : '';
     try {
       const response = await axios.put<Response<T>>(this.buildUrl(''), data, {
         headers: {
@@ -153,7 +154,7 @@ export default class HttpRequest {
           'api-key': isPublic
             ? process.env.EXPO_PUBLIC_FRONT_API_KEY ?? ''
             : '',
-          Authorization: token !== undefined ? `Bearer ${token}` : ''
+          Authorization: `Bearer ${token}`
         }
       });
       return response.data;
@@ -164,9 +165,9 @@ export default class HttpRequest {
 
   async delete<T>(
     id: string | null = null,
-    isPublic = false,
-    token?: string
+    isPublic = false
   ): Promise<Response<T>> {
+    const token = !isPublic ? await getValueToken() : '';
     try {
       const response = await axios.delete<Response<T>>(
         this.buildUrl(id ?? ''),
@@ -176,7 +177,7 @@ export default class HttpRequest {
             'api-key': isPublic
               ? process.env.EXPO_PUBLIC_FRONT_API_KEY ?? ''
               : '',
-            Authorization: token !== undefined ? `Bearer ${token}` : ''
+            Authorization: `Bearer ${token}`
           }
         }
       );

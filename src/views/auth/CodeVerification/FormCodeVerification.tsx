@@ -9,6 +9,8 @@ import { responseIsOk } from 'helpers/request';
 import { router } from 'expo-router';
 import useStorageValue from 'hooks/useStorageValue';
 import { storage } from 'utils/storageMmkv';
+import { save } from 'utils/secureStorage';
+import { type TokenUser } from 'models/User.interface';
 
 export default function FormCodeVerification(): React.JSX.Element {
   const email = useStorageValue('email');
@@ -45,16 +47,10 @@ export default function FormCodeVerification(): React.JSX.Element {
       setLoading(false);
       return;
     }
+    const responseData = response.data as TokenUser;
 
-    // const responseData = response.data as TokenUser;
-
-    // // Set cookie token session
-    // const [success, errors] = await setToken(responseData.token);
-    // if (!success) {
-    //   openAlert('error', errors);
-    //   setLoading(false);
-    //   return;
-    // }
+    // // Set token session
+    await save(responseData.token);
 
     storage.delete('email');
     storage.delete('name');

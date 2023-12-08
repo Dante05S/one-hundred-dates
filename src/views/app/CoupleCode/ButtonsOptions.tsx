@@ -1,8 +1,10 @@
 import Button from 'components/Buttons/Button';
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Share } from 'react-native';
 import { Ionicons, AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import useTheme from 'hooks/useTheme';
+import useShareCode from 'hooks/useShareCode';
+import useAlertControl from 'hooks/userAlertControl';
 
 interface ButtonsOptionsProps {
   onIsSharePage: (value: boolean) => void;
@@ -16,10 +18,31 @@ function ButtonsShare({
   onIsSharePage
 }: ButtonsOptionsProps): React.JSX.Element {
   const { theme } = useTheme();
+  const [loading, setLoading] = useState<boolean>(false);
+  const { openAlert } = useAlertControl();
+  const { coupleCode } = useShareCode();
+
+  const onShare = async (): Promise<void> => {
+    try {
+      setLoading(true);
+      const link = `https://one-hundred-dates.netlify.app/?code=${coupleCode}`;
+      await Share.share({
+        message: `Ingresa a ${link} para empezar a crear recuerdos junto a tu pareja 💙. One Hundred Dates`
+      });
+    } catch (error) {
+      openAlert('error', [(error as Error).message]);
+    }
+    setLoading(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={{ width: '100%' }}>
         <Button
+          loading={loading}
+          onPress={() => {
+            void onShare();
+          }}
           startIcon={
             <Ionicons
               name="share-social-sharp"
