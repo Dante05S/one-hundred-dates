@@ -13,6 +13,7 @@ import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
 import { router } from 'expo-router';
 import { setValueStorage } from 'utils/storageMmkv';
+import { save } from 'utils/secureStorage';
 
 const INIT_USER: LoginUser = {
   email: '',
@@ -40,7 +41,7 @@ export default function FormLogin(): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
 
   const redirectToHome = (): void => {
-    router.replace('/dates');
+    router.replace('/couple-code');
     setLoading(false);
   };
 
@@ -65,6 +66,7 @@ export default function FormLogin(): React.JSX.Element {
       redirectToVerification();
       return;
     }
+    await save(userResponse.token);
     redirectToHome();
   };
 

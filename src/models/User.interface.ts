@@ -17,9 +17,12 @@ export interface CodeVerifyUser {
 
 export interface TokenUser {
   user: User;
-  token: string | null;
+  token: string;
 }
 
+export interface CoupleCode {
+  temp_couple_code: string;
+}
 export type LoginUser = Pick<RegisterUser, 'email' | 'password'>;
 export type EmailUser = Pick<User, 'email'>;
 export type TokenSessionUser = Pick<TokenUser, 'token'>;

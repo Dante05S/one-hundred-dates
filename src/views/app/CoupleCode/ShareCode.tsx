@@ -4,6 +4,7 @@ import ButtonsOptions from './ButtonsOptions';
 import { View, StyleSheet } from 'react-native';
 import Paragraph from 'components/Paragraph';
 import useTheme from 'hooks/useTheme';
+import ShareCodeProvider from 'context/ShareCodeContext/ShareCodeProvider';
 
 const title = {
   share_page:
@@ -37,11 +38,13 @@ export default function ShareCode(): React.JSX.Element {
           {isSharePage ? title.share_page : title.enter_page}
         </Paragraph>
       </View>
-      <InputCode isSharePage={isSharePage} />
-      <ButtonsOptions
-        isSharePage={isSharePage}
-        onIsSharePage={handleIsSharePage}
-      />
+      <ShareCodeProvider>
+        <InputCode isSharePage={isSharePage} />
+        <ButtonsOptions
+          isSharePage={isSharePage}
+          onIsSharePage={handleIsSharePage}
+        />
+      </ShareCodeProvider>
     </View>
   );
 }
