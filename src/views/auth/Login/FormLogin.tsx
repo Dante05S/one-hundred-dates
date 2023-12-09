@@ -41,7 +41,7 @@ export default function FormLogin(): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
 
   const redirectToHome = (): void => {
-    router.replace('/couple-code');
+    router.replace('/couple-code/share');
     setLoading(false);
   };
 
