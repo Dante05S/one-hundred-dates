@@ -21,6 +21,8 @@ export interface FieldProps extends InputProps {
 interface StylesProps {
   error: boolean;
   focus: boolean;
+  hasStartIcon: boolean;
+  hasEndIcon: boolean;
 }
 
 const Field = forwardRef<TextInput, FieldProps>(function Field(
@@ -45,7 +47,12 @@ const Field = forwardRef<TextInput, FieldProps>(function Field(
     ['error'],
     muiFormControl
   );
-  const styles = useStyles({ focus, error: formControlState?.error ?? false });
+  const styles = useStyles({
+    focus,
+    error: formControlState?.error ?? false,
+    hasStartIcon: startIcon !== undefined,
+    hasEndIcon: endIcon !== undefined
+  });
 
   return (
     <View style={{ position: 'relative' }}>
@@ -84,7 +91,8 @@ const useStyles = makeStyles((theme, props: StylesProps) => {
     outlined: {
       fontFamily: 'poppins',
       paddingVertical: 10,
-      paddingHorizontal: 20
+      paddingLeft: props.hasStartIcon ? 50 : 20,
+      paddingRight: props.hasEndIcon ? 50 : 20
     },
     code: {
       fontFamily: 'poppins-semibold',

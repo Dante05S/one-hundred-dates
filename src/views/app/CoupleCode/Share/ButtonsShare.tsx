@@ -1,23 +1,15 @@
 import Button from 'components/Buttons/Button';
 import React, { useState } from 'react';
 import { View, StyleSheet, Share } from 'react-native';
-import { Ionicons, AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
 import useTheme from 'hooks/useTheme';
 import useShareCode from 'hooks/useShareCode';
 import useAlertControl from 'hooks/userAlertControl';
+import { useRouter } from 'expo-router';
 
-interface ButtonsOptionsProps {
-  onIsSharePage: (value: boolean) => void;
-}
-
-interface Props extends ButtonsOptionsProps {
-  isSharePage: boolean;
-}
-
-function ButtonsShare({
-  onIsSharePage
-}: ButtonsOptionsProps): React.JSX.Element {
+export default function ButtonsShare(): React.JSX.Element {
   const { theme } = useTheme();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { openAlert } = useAlertControl();
   const { coupleCode } = useShareCode();
@@ -30,7 +22,10 @@ function ButtonsShare({
         message: `Ingresa a ${link} para empezar a crear recuerdos junto a tu pareja 💙. One Hundred Dates`
       });
     } catch (error) {
-      openAlert('error', [(error as Error).message]);
+      openAlert('error', [
+        (error as Error)?.message ??
+          'Error inesperado al intentar compartir el codigo'
+      ]);
     }
     setLoading(false);
   };
@@ -57,7 +52,7 @@ function ButtonsShare({
       <View style={{ width: '100%' }}>
         <Button
           onPress={() => {
-            onIsSharePage(false);
+            router.push('/couple-code/enter');
           }}
           startIcon={
             <AntDesign
@@ -71,60 +66,6 @@ function ButtonsShare({
         </Button>
       </View>
     </View>
-  );
-}
-
-function ButtonsEnter({
-  onIsSharePage
-}: ButtonsOptionsProps): React.JSX.Element {
-  const { theme } = useTheme();
-  return (
-    <View style={styles.container}>
-      <View style={{ width: '100%' }}>
-        <Button
-          startIcon={
-            <FontAwesome5
-              name="link"
-              size={22}
-              color={theme.palette.primary.contrastText}
-            />
-          }
-        >
-          Conectar
-        </Button>
-      </View>
-      <View style={{ width: '100%' }}>
-        <Button
-          onPress={() => {
-            onIsSharePage(true);
-          }}
-          startIcon={
-            <Ionicons
-              name="share-social-sharp"
-              size={22}
-              color={theme.palette.primary.contrastText}
-            />
-          }
-        >
-          Compartir codigo
-        </Button>
-      </View>
-    </View>
-  );
-}
-
-export default function ButtonsOptions({
-  isSharePage,
-  onIsSharePage
-}: Props): React.JSX.Element {
-  return (
-    <>
-      {isSharePage ? (
-        <ButtonsShare onIsSharePage={onIsSharePage} />
-      ) : (
-        <ButtonsEnter onIsSharePage={onIsSharePage} />
-      )}
-    </>
   );
 }
 

@@ -4,18 +4,12 @@ import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import IconButton from 'components/Buttons/IconButton';
 import useTheme from 'hooks/useTheme';
-import TextField from 'components/Inputs/TextField';
-import InputIcon from 'components/Inputs/InputIcon';
 import Loading from 'components/Loading';
 import * as Clipboard from 'expo-clipboard';
 import useToastControl from 'hooks/useToastControl';
 import useShareCode from 'hooks/useShareCode';
 
-interface Props {
-  isSharePage: boolean;
-}
-
-function CopyCode(): React.JSX.Element {
+export default function CopyCode(): React.JSX.Element {
   const { theme } = useTheme();
   const { alertToast } = useToastControl();
   const { coupleCode, loading } = useShareCode();
@@ -55,25 +49,6 @@ function CopyCode(): React.JSX.Element {
       </View>
     </Loading>
   );
-}
-
-function EnterCode(): React.JSX.Element {
-  return (
-    <TextField
-      placeholder="Ingresar codigo de pareja"
-      name="email"
-      required
-      endIcon={
-        <InputIcon position="end">
-          <Ionicons name="code-slash" size={22} />
-        </InputIcon>
-      }
-    />
-  );
-}
-
-export default function InputCode({ isSharePage }: Props): React.JSX.Element {
-  return <>{isSharePage ? <CopyCode /> : <EnterCode />}</>;
 }
 
 const styles = StyleSheet.create({

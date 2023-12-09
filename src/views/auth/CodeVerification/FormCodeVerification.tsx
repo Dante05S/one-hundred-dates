@@ -28,7 +28,7 @@ export default function FormCodeVerification(): React.JSX.Element {
   };
 
   const redirectTo = (): void => {
-    router.replace('/dates');
+    router.replace('/couple-code/share');
     setLoading(false);
   };
 
