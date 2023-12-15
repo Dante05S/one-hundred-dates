@@ -3,8 +3,8 @@ import TextField from 'components/Inputs/TextField';
 import React, { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
-import useCoupleCode from 'hooks/useCoupleCode';
 import { useLocalSearchParams } from 'expo-router';
+import useCoupleCode from 'hooks/useCoupleCode';
 
 export default function EnterCode(): React.JSX.Element {
   const { code } = useLocalSearchParams<{ code?: string }>();
