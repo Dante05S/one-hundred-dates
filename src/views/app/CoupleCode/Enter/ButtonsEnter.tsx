@@ -8,8 +8,11 @@ import CoupleService from 'services/CoupleService';
 import useCoupleCode from 'hooks/useCoupleCode';
 import { responseIsOk } from 'helpers/request';
 import useAlertControl from 'hooks/userAlertControl';
+import useApp from 'hooks/useApp';
+import { type Couple } from 'models/Couple.interface';
 
 export default function ButtonsEnter(): React.JSX.Element {
+  const { user, onChangeUser } = useApp();
   const { theme } = useTheme();
   const router = useRouter();
   const { openAlert } = useAlertControl();
@@ -25,6 +28,15 @@ export default function ButtonsEnter(): React.JSX.Element {
       setLoading(false);
       return;
     }
+
+    const data = response.data as Couple;
+    const updateUser = Object.assign({}, user, {
+      type_couple: 'a',
+      couple: data
+    });
+
+    // Set global state app
+    onChangeUser(updateUser);
 
     router.replace('/dates');
     setLoading(false);

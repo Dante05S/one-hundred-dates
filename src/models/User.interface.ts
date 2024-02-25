@@ -1,3 +1,5 @@
+import { type Couple } from './Couple.interface';
+
 export interface User {
   name: string;
   email: string;
@@ -5,7 +7,11 @@ export interface User {
 }
 
 export interface UserCouple extends User {
-  couple: CoupleCode | null;
+  couple: Couple | null;
+}
+
+export interface CodeCouple {
+  temp_couple_code: string;
 }
 
 export type FormUser = Pick<User, 'name' | 'email'>;
@@ -30,9 +36,6 @@ export interface TokenUser {
   refresh_token: string;
 }
 
-export interface CoupleCode {
-  temp_couple_code: string;
-}
 export type LoginUser = Pick<RegisterUser, 'email' | 'password'>;
 export type EmailUser = Pick<User, 'email'>;
 export type TokenSessionUser = Pick<TokenUser, 'token'>;
