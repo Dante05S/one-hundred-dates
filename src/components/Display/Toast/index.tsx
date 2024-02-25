@@ -15,7 +15,7 @@ export default function Toast({
   show,
   onClose
 }: Props): React.JSX.Element | null {
-  const [mounted, setMounted] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
     if (show) {

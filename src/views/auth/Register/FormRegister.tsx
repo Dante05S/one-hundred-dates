@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import Form from 'components/Form';
@@ -42,6 +42,7 @@ const validations: ValidationField = {
 };
 
 export default function FormRegister(): React.JSX.Element {
+  const router = useRouter();
   const { openAlert } = useAlertControl();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);

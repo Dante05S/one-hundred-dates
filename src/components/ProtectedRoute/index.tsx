@@ -1,28 +1,35 @@
 import React from 'react';
 import ValidateStorage from './ValidateStorage';
+import ValidateCustom from './ValidateCustom';
+import ValidateSession from './ValidateSession';
 
-interface ValidateTypeToken {
-  type: 'token';
+interface ValidateTypeSession {
+  type: 'session';
+  validateOpen: boolean;
 }
-
 interface ValidateTypeStorage {
   type: 'storage';
   keyStorage: string;
   redirectWhenExist?: boolean;
 }
 
-type Validate = ValidateTypeStorage | ValidateTypeToken;
+interface ValidateTypeCustom {
+  type: 'custom';
+  validate: () => boolean | Promise<boolean>;
+}
+
+type Validate = ValidateTypeStorage | ValidateTypeCustom | ValidateTypeSession;
 
 interface Props {
   children: React.ReactNode;
   redirect: string;
-  validate?: Validate;
+  validate: Validate;
 }
 
 export default function ProtectedRoute({
   children,
   redirect,
-  validate = { type: 'token' }
+  validate
 }: Props): React.JSX.Element {
   if (validate.type === 'storage') {
     return (
@@ -35,6 +42,23 @@ export default function ProtectedRoute({
       </ValidateStorage>
     );
   }
+
+  if (validate.type === 'custom') {
+    return (
+      <ValidateCustom validate={validate.validate} redirect={redirect}>
+        {children}
+      </ValidateCustom>
+    );
+  }
+
+  if (validate.type === 'session') {
+    return (
+      <ValidateSession validateOpen={validate.validateOpen} redirect={redirect}>
+        {children}
+      </ValidateSession>
+    );
+  }
+
   return (
     <>
       <>{children}</>

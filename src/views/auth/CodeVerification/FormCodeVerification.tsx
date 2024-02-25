@@ -6,13 +6,16 @@ import CodeInputs, { type ICodeInputs } from './CodeInputs';
 import TimerCode from './TimerCode';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import useStorageValue from 'hooks/useStorageValue';
 import { storage } from 'utils/storageMmkv';
-import { save } from 'utils/secureStorage';
+import { save, saveRefresh } from 'utils/secureStorage';
 import { type TokenUser } from 'models/User.interface';
+import useApp from 'hooks/useApp';
 
 export default function FormCodeVerification(): React.JSX.Element {
+  const router = useRouter();
+  const { onChangeUser } = useApp();
   const email = useStorageValue('email');
   const { openAlert } = useAlertControl();
   const [codeInputs, setCodeInputs] = useState<ICodeInputs>({
@@ -49,14 +52,16 @@ export default function FormCodeVerification(): React.JSX.Element {
     }
     const responseData = response.data as TokenUser;
 
-    // // Set token session
-    await save(responseData.token);
-
+    // Set token session
+    await Promise.all([
+      save(responseData.token),
+      saveRefresh(responseData.refresh_token)
+    ]);
     storage.delete('email');
     storage.delete('name');
 
-    // // Set global state app
-    // setUser(responseData.user);
+    // Set global state app
+    onChangeUser(responseData.user);
     redirectTo();
   };
 

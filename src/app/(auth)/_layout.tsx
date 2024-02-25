@@ -3,10 +3,14 @@ import Wave from 'views/auth/Wave';
 import { Slot } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import ProtectedRoute from 'components/ProtectedRoute';
 
 export default function AuthLayout(): React.JSX.Element {
   return (
-    <>
+    <ProtectedRoute
+      redirect="/dates"
+      validate={{ type: 'session', validateOpen: false }}
+    >
       <View style={styles.containerWave}>
         <Wave />
       </View>
@@ -16,7 +20,7 @@ export default function AuthLayout(): React.JSX.Element {
       <View style={styles.containerFooter}>
         <Footer />
       </View>
-    </>
+    </ProtectedRoute>
   );
 }
 

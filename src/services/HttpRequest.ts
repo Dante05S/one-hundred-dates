@@ -2,17 +2,30 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // Interfaces
 import axios, { type AxiosResponse } from 'axios';
+import { ResponseCode } from 'enums/response_code';
+import { router } from 'expo-router';
+import { responseIsOk } from 'helpers/request';
 import { type Response } from 'interfaces/response.interface';
+import { type UserRefresh } from 'models/User.interface';
 import { type ResponseObjectData } from 'types/response_data.type';
-import { getValueToken } from 'utils/secureStorage';
+import {
+  deleteRefreshToken,
+  deleteToken,
+  getValueRefreshToken,
+  getValueToken,
+  save,
+  saveRefresh
+} from 'utils/secureStorage';
 
 export default class HttpRequest {
   private endpoint: string;
   private params: string;
+  private autoRedirect: boolean;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
     this.params = '';
+    this.autoRedirect = true;
   }
 
   setEndpoint(endpoint: string): void {
@@ -23,13 +36,21 @@ export default class HttpRequest {
     this.params = params;
   }
 
+  public setAutoRedirect(autoRedirect: boolean): void {
+    this.autoRedirect = autoRedirect;
+  }
+
   buildUrl(id = ''): string {
     const endpoint = id !== '' ? `${this.endpoint}/${id}` : this.endpoint;
     const params = this.params !== '' ? `?${this.params}` : '';
     return `${process.env.EXPO_PUBLIC_API_URI ?? ''}/${endpoint}${params}`;
   }
 
-  private handleError<T>(err: unknown): Response<T> {
+  private async handleError<T>(
+    err: unknown,
+    isPublic: boolean,
+    callback: () => Promise<Response<T>>
+  ): Promise<Response<T>> {
     if (!axios.isAxiosError<Response<T>>(err)) {
       console.error(err);
       return {
@@ -41,7 +62,7 @@ export default class HttpRequest {
       };
     }
     if (err.response !== undefined) {
-      return err.response.data;
+      return await this.refresh(isPublic, err.response.data, callback);
     }
     if (err.request !== undefined) {
       console.error(err.request);
@@ -61,6 +82,68 @@ export default class HttpRequest {
       message: err.message,
       success: false
     };
+  }
+
+  private async refresh<T>(
+    isPublic: boolean,
+    response: Response<T>,
+    callback: () => Promise<Response<T>>
+  ): Promise<Response<T>> {
+    if (
+      isPublic ||
+      response.code !== ResponseCode.NOT_AUTHORIZED ||
+      response.data === null ||
+      typeof response.data !== 'object' ||
+      !('type' in response.data) ||
+      response.data.type !== 'expired'
+    ) {
+      if (
+        !isPublic &&
+        (response.code === ResponseCode.NOT_AUTHORIZED ||
+          response.code === ResponseCode.SERVER_ERROR) &&
+        response.data !== null &&
+        typeof response.data === 'object' &&
+        'type' in response.data &&
+        response.data.type !== 'expired'
+      ) {
+        await Promise.all([deleteToken(), deleteRefreshToken()]);
+        if (this.autoRedirect) {
+          router.replace('/login');
+        }
+      }
+      return response;
+    }
+
+    try {
+      const refreshToken = await getValueRefreshToken();
+      const responseRefresh = await axios.get<Response<UserRefresh>>(
+        `${process.env.EXPO_PUBLIC_API_URI ?? ''}/auth/refresh`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${refreshToken}`
+          }
+        }
+      );
+
+      if (
+        responseIsOk(responseRefresh.data.success, responseRefresh.data.data)
+      ) {
+        const tokens = responseRefresh.data.data as UserRefresh;
+        await Promise.all([
+          save(tokens.token),
+          saveRefresh(tokens.refresh_token)
+        ]);
+        return await callback();
+      }
+      return response;
+    } catch (error) {
+      await Promise.all([deleteToken(), deleteRefreshToken()]);
+      if (this.autoRedirect) {
+        router.replace('/login');
+      }
+      return response;
+    }
   }
 
   async get<T>(
@@ -93,7 +176,11 @@ export default class HttpRequest {
       }
       return response.data;
     } catch (err) {
-      return this.handleError(err);
+      return await this.handleError<T>(
+        err,
+        isPublic,
+        async () => await this.get<T>(id, isPublic)
+      );
     }
   }
 
@@ -112,10 +199,13 @@ export default class HttpRequest {
           Authorization: `Bearer ${token}`
         }
       });
-
       return response.data;
     } catch (err) {
-      return this.handleError(err);
+      return await this.handleError<T>(
+        err,
+        isPublic,
+        async () => await this.post<T>(data, isPublic)
+      );
     }
   }
 
@@ -138,7 +228,11 @@ export default class HttpRequest {
 
       return response.data;
     } catch (err) {
-      return this.handleError(err);
+      return await this.handleError<T>(
+        err,
+        isPublic,
+        async () => await this.put<T>(id, data, isPublic)
+      );
     }
   }
 
@@ -159,7 +253,11 @@ export default class HttpRequest {
       });
       return response.data;
     } catch (err) {
-      return this.handleError(err);
+      return await this.handleError<T>(
+        err,
+        isPublic,
+        async () => await this.putNew<T>(data, isPublic)
+      );
     }
   }
 
@@ -183,7 +281,11 @@ export default class HttpRequest {
       );
       return response.data;
     } catch (err) {
-      return this.handleError(err);
+      return await this.handleError<T>(
+        err,
+        isPublic,
+        async () => await this.delete<T>(id, isPublic)
+      );
     }
   }
 }

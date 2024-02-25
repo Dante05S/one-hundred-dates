@@ -11,9 +11,8 @@ import Button from 'components/Buttons/Button';
 import useAlertControl from 'hooks/userAlertControl';
 import AuthService from 'services/AuthService';
 import { responseIsOk } from 'helpers/request';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { setValueStorage } from 'utils/storageMmkv';
-import { save } from 'utils/secureStorage';
 
 const INIT_USER: LoginUser = {
   email: '',
@@ -36,14 +35,10 @@ const validations: ValidationField = {
 };
 
 export default function FormLogin(): React.JSX.Element {
+  const router = useRouter();
   const { openAlert } = useAlertControl();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const redirectToHome = (): void => {
-    router.replace('/couple-code/share');
-    setLoading(false);
-  };
 
   const redirectToVerification = (): void => {
     router.replace('/code-verification');
@@ -60,14 +55,9 @@ export default function FormLogin(): React.JSX.Element {
       return;
     }
     const userResponse = response.data as TokenUser;
-    if (!userResponse.user.email_verification) {
-      setValueStorage('email', userResponse.user.email, 60 * 5);
-      setValueStorage('name', userResponse.user.name, 60 * 5);
-      redirectToVerification();
-      return;
-    }
-    await save(userResponse.token);
-    redirectToHome();
+    setValueStorage('email', userResponse.user.email, 60 * 5);
+    setValueStorage('name', userResponse.user.name, 60 * 5);
+    redirectToVerification();
   };
 
   const onSubmit = (data: LoginUser): void => {

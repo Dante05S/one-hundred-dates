@@ -6,45 +6,58 @@ import { Slot } from 'expo-router';
 import Paragraph from 'components/Paragraph';
 import useTheme from 'hooks/useTheme';
 import CoupleCodeProvider from 'context/CoupleCodeContext/CoupleCodeProvider';
+import ProtectedRoute from 'components/ProtectedRoute';
+import useApp from 'hooks/useApp';
 
 export default function CoupleCode(): React.JSX.Element {
   const { theme } = useTheme();
+  const { user } = useApp();
+
+  const validateUser = (): boolean => {
+    return user !== null && user.couple === null;
+  };
+
   return (
-    <View style={{ paddingBottom: 20 }}>
-      <View style={styles.containerWave}>
-        <Wave />
-      </View>
-      <View style={styles.container}>
-        <Image
-          style={{ width: 250, height: 162 }}
-          source="https://i.ibb.co/KDzJ15D/png-clipart-cinnamoroll-sanrio-cat-like-moominmamma-cinnamoroll-mammal-food-removebg-preview.png"
-        />
-        <View style={styles.containerSlot}>
-          <Paragraph
-            variant="h5"
-            style={{
-              color: theme.palette.primary.main,
-              marginBottom: 5,
-              fontSize: 28
-            }}
-          >
-            Codigo de pareja
-          </Paragraph>
-          <View
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 30,
-              width: '100%'
-            }}
-          >
-            <CoupleCodeProvider>
-              <Slot />
-            </CoupleCodeProvider>
+    <ProtectedRoute
+      redirect="/dates"
+      validate={{ type: 'custom', validate: validateUser }}
+    >
+      <View style={{ paddingBottom: 20 }}>
+        <View style={styles.containerWave}>
+          <Wave />
+        </View>
+        <View style={styles.container}>
+          <Image
+            style={{ width: 250, height: 162 }}
+            source="https://i.ibb.co/KDzJ15D/png-clipart-cinnamoroll-sanrio-cat-like-moominmamma-cinnamoroll-mammal-food-removebg-preview.png"
+          />
+          <View style={styles.containerSlot}>
+            <Paragraph
+              variant="h5"
+              style={{
+                color: theme.palette.primary.main,
+                marginBottom: 5,
+                fontSize: 28
+              }}
+            >
+              Codigo de pareja
+            </Paragraph>
+            <View
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 30,
+                width: '100%'
+              }}
+            >
+              <CoupleCodeProvider>
+                <Slot />
+              </CoupleCodeProvider>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </ProtectedRoute>
   );
 }
 

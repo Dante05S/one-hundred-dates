@@ -14,6 +14,11 @@ export default class Service<T> extends HttpRequest implements IService<T> {
     return response;
   }
 
+  async getOne(isPublic = false): Promise<Response<T>> {
+    const response: Response<T> = await this.get<T>(null, isPublic);
+    return response;
+  }
+
   async create(
     data: ResponseObjectData,
     isPublic = false
