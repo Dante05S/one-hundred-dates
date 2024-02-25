@@ -3,7 +3,7 @@ import ShareCodeContext from '.';
 import UserService from 'services/UserService';
 import { responseIsOk } from 'helpers/request';
 import useAlertControl from 'hooks/userAlertControl';
-import { type CoupleCode } from 'models/User.interface';
+import { type CodeCouple } from 'models/User.interface';
 
 interface Props {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export default function ShareCodeProvider({
       openAlert('error', response.errors);
       return;
     }
-    const user = response.data as CoupleCode;
+    const user = response.data as CodeCouple;
     setCoupleCode(user.temp_couple_code);
     setLoading(false);
   };
