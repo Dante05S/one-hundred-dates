@@ -27,7 +27,7 @@ export interface UserRefresh {
 
 export interface CodeVerifyUser {
   email: string;
-  code_token: string;
+  codeToken: string;
 }
 
 export interface TokenUser {

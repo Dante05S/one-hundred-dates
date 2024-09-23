@@ -39,7 +39,7 @@ export default function FormCodeVerification(): React.JSX.Element {
     setLoading(true);
     const data = {
       email: email ?? '',
-      code_token: `${codeInputs.sms_token1}${codeInputs.sms_token2}${codeInputs.sms_token3}${codeInputs.sms_token4}`
+      codeToken: `${codeInputs.sms_token1}${codeInputs.sms_token2}${codeInputs.sms_token3}${codeInputs.sms_token4}`
     };
 
     // Login user

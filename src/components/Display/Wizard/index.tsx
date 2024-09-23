@@ -24,10 +24,16 @@ export default function Wizard({
       transparent
       onRequestClose={onClose}
     >
-      <ScrollView style={styles.container} contentContainerStyle={styles.modal}>
-        <Pressable style={styles.pane} onPress={onClose} />
-        <View style={styles.modalView}>{children}</View>
-      </ScrollView>
+      <View style={styles.container}>
+        <View style={styles.modal}>
+          <Pressable style={styles.pane} onPress={onClose} />
+          <View style={styles.modalView}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+              {children}
+            </ScrollView>
+          </View>
+        </View>
+      </View>
     </Modal>
   );
 }
@@ -54,9 +60,11 @@ const useStyles = makeStyles((theme) => ({
   },
   modalView: {
     backgroundColor: '#fff',
-    paddingHorizontal: 8,
-    paddingVertical: 16,
     width: '100%',
     borderRadius: 8
+  },
+  scrollView: {
+    paddingHorizontal: 8,
+    paddingVertical: 16
   }
 }));

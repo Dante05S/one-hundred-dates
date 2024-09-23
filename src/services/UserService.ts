@@ -2,13 +2,13 @@ import { type Response } from 'interfaces/response.interface';
 import { type IService } from 'interfaces/service.interface';
 import {
   type UserCouple,
-  type CoupleCode,
+  type CodeCouple,
   type User
 } from 'models/User.interface';
 import Service from 'services';
 
 interface IUserService extends IService<User> {
-  generateCoupleCode: () => Promise<Response<CoupleCode>>;
+  generateCoupleCode: () => Promise<Response<CodeCouple>>;
   getUser: () => Promise<Response<UserCouple>>;
 }
 
@@ -22,9 +22,9 @@ export default class UserService extends Service<User> implements IUserService {
     return response;
   }
 
-  async generateCoupleCode(): Promise<Response<CoupleCode>> {
+  async generateCoupleCode(): Promise<Response<CodeCouple>> {
     this.setEndpoint('/user/generate-couple-code');
-    const response: Response<CoupleCode> = await this.get();
+    const response: Response<CodeCouple> = await this.get();
     return response;
   }
 }
