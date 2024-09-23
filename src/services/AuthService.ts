@@ -27,9 +27,9 @@ export default class AuthService extends Service<User> implements IAuthService {
     return response;
   }
 
-  async login(data: LoginUser): Promise<Response<TokenUser>> {
+  async login(data: LoginUser): Promise<Response<User>> {
     this.setEndpoint('auth/login');
-    const response: Response<TokenUser> = await this.post({ ...data }, true);
+    const response: Response<User> = await this.post({ ...data }, true);
     return response;
   }
 

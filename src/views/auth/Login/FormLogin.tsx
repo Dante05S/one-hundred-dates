@@ -4,7 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import Form from 'components/Form';
 import TextField from 'components/Inputs/TextField';
 import InputIcon from 'components/Inputs/InputIcon';
-import { type TokenUser, type LoginUser } from 'models/User.interface';
+import { type LoginUser, type User } from 'models/User.interface';
 import { type ValidationField } from 'helpers/Validator';
 import ShowPassword from 'components/ShowPassword';
 import Button from 'components/Buttons/Button';
@@ -54,9 +54,9 @@ export default function FormLogin(): React.JSX.Element {
       setLoading(false);
       return;
     }
-    const userResponse = response.data as TokenUser;
-    setValueStorage('email', userResponse.user.email, 60 * 5);
-    setValueStorage('name', userResponse.user.name, 60 * 5);
+    const userResponse = response.data as User;
+    setValueStorage('email', userResponse.email, 60 * 5);
+    setValueStorage('name', userResponse.name, 60 * 5);
     redirectToVerification();
   };
 
