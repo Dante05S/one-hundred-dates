@@ -22,7 +22,7 @@ export default function ButtonsEnter(): React.JSX.Element {
   const connect = async (): Promise<void> => {
     setLoading(true);
     const coupleService = new CoupleService();
-    const response = await coupleService.create({ couple_code: inputCode });
+    const response = await coupleService.create({ coupleCode: inputCode });
     if (!responseIsOk(response.success, response.data)) {
       openAlert('error', response.errors);
       setLoading(false);
