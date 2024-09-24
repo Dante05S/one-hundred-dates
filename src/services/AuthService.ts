@@ -3,9 +3,7 @@ import { type IService } from 'interfaces/service.interface';
 import {
   type User,
   type RegisterUser,
-  type EmailUser,
   type TokenUser,
-  type TokenSessionUser,
   type LoginUser,
   type CodeVerifyUser
 } from 'models/User.interface';
@@ -13,7 +11,9 @@ import Service from 'services';
 
 interface IAuthService extends IService<User> {
   register: (data: RegisterUser) => Promise<Response<User>>;
-  setCookieEmail: (email: string) => Promise<Response<EmailUser>>;
+  login: (data: LoginUser) => Promise<Response<User>>;
+  validateCode: (data: CodeVerifyUser) => Promise<Response<TokenUser>>;
+  resendCode: (email: string) => Promise<Response<null>>;
 }
 
 export default class AuthService extends Service<User> implements IAuthService {
@@ -43,32 +43,5 @@ export default class AuthService extends Service<User> implements IAuthService {
     this.setEndpoint('/auth/resend-code');
     const response: Response<null> = await this.post({ email }, true);
     return response;
-  }
-
-  async setCookieEmail(email: string): Promise<Response<EmailUser>> {
-    const response = await fetch('/api/auth/set-cookie-email', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    return response.json() as unknown as Response<EmailUser>;
-  }
-
-  async deleteCookieEmail(): Promise<Response<null>> {
-    const response = await fetch('/api/auth/delete-cookie-email');
-    return response.json() as unknown as Response<null>;
-  }
-
-  async setCookieToken(token: string): Promise<Response<TokenSessionUser>> {
-    const response = await fetch('/api/auth/set-cookie-token', {
-      method: 'POST',
-      body: JSON.stringify({ token }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    return response.json() as unknown as Response<TokenSessionUser>;
   }
 }
