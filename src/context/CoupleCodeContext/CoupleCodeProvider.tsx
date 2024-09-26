@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import CoupleCodeContext from '.';
-import { initPusher, unsubscribe } from 'utils/pusher';
+import {
+  type DataEvent,
+  type PusherEventCustom,
+  subscribe,
+  unsubscribe
+} from 'utils/pusher';
 import useApp from 'hooks/useApp';
-import { type PusherEvent } from '@pusher/pusher-websocket-react-native';
+import { EventsPusher } from 'enums/events-pusher';
+import useAlertControl from 'hooks/userAlertControl';
+import { router } from 'expo-router';
+import { type Couple } from 'models/Couple.interface';
 
 interface Props {
   children: React.ReactNode;
@@ -12,21 +20,37 @@ export default function CoupleCodeProvider({
   children
 }: Props): React.JSX.Element {
   const [inputCode, setInputCode] = useState<string>('');
-  const { user } = useApp();
+  const { user, onChangeUser } = useApp();
+  const { handleErrorPusher } = useAlertControl();
 
   const handleInputCode = (value: string): void => {
     setInputCode(value);
   };
 
+  const redirect = (event: PusherEventCustom): void => {
+    const data = JSON.parse(event.data) as DataEvent<{ couple: Couple }>;
+
+    const updateUser = Object.assign({}, user, {
+      type_couple: 'b',
+      couple: data.message.couple
+    });
+
+    onChangeUser(updateUser);
+    router.replace('/couple-data');
+  };
+
   const handleEventPusher = async (): Promise<void> => {
     if (user !== null) {
-      const pusher = await initPusher();
-      await pusher.subscribe({
-        channelName: `USER_${user.id}`,
-        onEvent: (event: PusherEvent) => {
-          console.log(event);
-        }
-      });
+      await subscribe(
+        `USER_${user.id}`,
+        [
+          {
+            condition: (event) => event === EventsPusher.CONNECT_COUPLE,
+            callback: redirect
+          }
+        ],
+        handleErrorPusher
+      );
     }
   };
 

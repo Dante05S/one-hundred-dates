@@ -22,12 +22,17 @@ export default function AlertControl({ children }: Props): React.JSX.Element {
     alert(severity, messages, onClose);
   };
 
+  const handleErrorPusher = (channelName: string, message: string): void => {
+    openAlert('error', [`Pusher error channel: ${channelName} ${message}`]);
+  };
+
   return (
     <AlertControlContext.Provider
       value={{
         messages,
         severity,
-        openAlert
+        openAlert,
+        handleErrorPusher
       }}
     >
       {children}

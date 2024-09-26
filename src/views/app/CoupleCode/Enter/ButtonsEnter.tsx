@@ -38,7 +38,7 @@ export default function ButtonsEnter(): React.JSX.Element {
     // Set global state app
     onChangeUser(updateUser);
 
-    router.replace('/dates');
+    router.replace('/couple-data');
     setLoading(false);
   };
 
