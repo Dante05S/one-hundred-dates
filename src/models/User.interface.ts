@@ -1,6 +1,7 @@
 import { type Couple } from './Couple.interface';
 
 export interface User {
+  id: string;
   name: string;
   email: string;
   type_couple: 'a' | 'b' | null;
